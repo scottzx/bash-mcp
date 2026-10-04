@@ -1,0 +1,27 @@
+{
+  "name": "@1agents/bash-mcp",
+  "version": "0.1.0",
+  "description": "Lightweight Bash MCP and structured search for the DreamMate capability network",
+  "type": "module",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/scottzx/bash-mcp.git" },
+  "homepage": "https://github.com/scottzx/bash-mcp#readme",
+  "bugs": { "url": "https://github.com/scottzx/bash-mcp/issues" },
+  "keywords": ["bash", "terminal", "mcp", "dreammate", "json", "ripgrep"],
+  "bin": { "bash-mcp": "bin/bash-mcp.mjs" },
+  "exports": { ".": "./src/bridge.mjs" },
+  "files": ["bin", "src", "scripts", "skills", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "docs"],
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "start": "node bin/bash-mcp.mjs serve",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "prepack": "npm run check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "mcp-server-commands": "0.8.2"
+  },
+  "overrides": { "mcp-server-commands": { "@modelcontextprotocol/sdk": "1.30.0" } },
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org" }
+}
