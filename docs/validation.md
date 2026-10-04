@@ -34,3 +34,12 @@
   本机现有 SSH 密钥登录被拒绝，远程安装与 CPU、内存、磁盘检查待取得可用登录方式。
 
 完整使用方式和限制见 [README.md](../README.md)。
+
+2026-10-05，WSL / Node.js 22.22.1 / systemd 用户服务。
+
+- 首次实机安装发现 `WorkingDirectory` 不接受 argv 式引号，`0.1.2` 修正该字段，
+  并按字段分别处理 ExecStart 与 Environment 的美元符号转义。
+- 在远程真实 systemd 中创建并执行临时测试服务，目录含中文、空格、百分号、美元符号和引号；
+  执行进程返回的 cwd、argv、PATH 均与输入一致；测试服务和临时目录已清理。
+- 新增 Linux `systemd-analyze --user verify` 回归验证，检查实际 systemd 解析器，
+  macOS 上跳过此 Linux 专用用例。

@@ -30,6 +30,7 @@ bash-mcp status
 `journalctl --user -u bash-mcp.service` 查看。用户级 systemd 常驻跨登出需要设备已有 linger。
 部署后保留 npm 全局安装目录。源码开发可用 `npm ci` 后运行
 `node bin/bash-mcp.mjs install --cwd /absolute/project/path`。
+Linux 常驻服务的默认目录不能包含换行，或以空白/反斜线结尾。
 
 ```bash
 # 前台运行并自动报备；网关暂不可用时服务照常运行并持续尝试报备

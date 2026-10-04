@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -62,4 +67,20 @@ test('deployment quoting and local gateway validation', () => {
   const unit = renderUnit(['/node path', '/a%repo', '$literal'], '/dir', '/bin'); assert.ok(unit.includes('"/node path"')); assert.ok(unit.includes('/a%%repo')); assert.ok(unit.includes('$$literal'));
   assert.equal(localAgentUrl('http://127.0.0.1:36908'), 'http://127.0.0.1:36908');
   for (const url of ['http://example.com:36908', 'https://localhost:36908', 'http://localhost:36908/path', 'http://user:pass@localhost:36908']) assert.throws(() => localAgentUrl(url));
+});
+
+test('Linux systemd parses the generated service unit', { skip: process.platform !== 'linux' }, async (t) => {
+  const run = promisify(execFile);
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'bash-mcp-unit-'));
+  t.after(() => fs.rm(directory, { recursive: true, force: true }));
+  const cwd = path.join(directory, '目录 50% $ "quoted"');
+  await fs.mkdir(cwd);
+  const file = path.join(directory, 'bash-mcp-fixture.service');
+  await fs.writeFile(file, renderUnit([process.execPath, '-e', ''], cwd, '/bin:/path $literal 50%'));
+  try {
+    await run('systemd-analyze', ['--user', 'verify', file], { timeout: 10000 });
+  } catch (error) {
+    if (error.code === 'ENOENT') { t.skip('systemd-analyze is not installed'); return; }
+    throw error;
+  }
 });

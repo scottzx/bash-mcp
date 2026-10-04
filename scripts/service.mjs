@@ -16,7 +16,8 @@ const plist = path.join(os.homedir(), 'Library', 'LaunchAgents', `${label}.plist
 const unitPath = path.join(os.homedir(), '.config', 'systemd', 'user', unit);
 const xml = (s) => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;');
 const shellQuote = (s) => "'" + String(s).replaceAll("'", "'\\''") + "'";
-const systemdQuote = (s) => '"' + String(s).replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll('%', '%%').replaceAll('$', () => '$$') + '"';
+const systemdQuote = (s) => '"' + String(s).replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll('%', '%%') + '"';
+const systemdArg = (s) => systemdQuote(String(s).replaceAll('$', () => '$$'));
 
 export function renderPlist(argv, cwd, logDir, searchPath) {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -33,7 +34,10 @@ export function renderPlist(argv, cwd, logDir, searchPath) {
 </dict></plist>\n`;
 }
 export function renderUnit(argv, cwd, searchPath) {
-  return `[Unit]\nDescription=DreamMate Bash MCP\nAfter=network-online.target\n\n[Service]\nType=simple\nExecStart=${argv.map(systemdQuote).join(' ')}\nWorkingDirectory=${systemdQuote(cwd)}\nEnvironment=${systemdQuote('PATH=' + searchPath)}\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=default.target\n`;
+  if (/[\r\n]|\s$|\\$/.test(cwd)) throw new Error('systemd cwd cannot end in whitespace/backslash or contain line breaks.');
+  // WorkingDirectory is a literal path, not an argv item: quotes become path
+  // characters. Environment assignments also need no dollar expansion escaping.
+  return `[Unit]\nDescription=DreamMate Bash MCP\nAfter=network-online.target\n\n[Service]\nType=simple\nExecStart=${argv.map(systemdArg).join(' ')}\nWorkingDirectory=${String(cwd).replaceAll('%', '%%')}\nEnvironment=${systemdQuote('PATH=' + searchPath)}\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=default.target\n`;
 }
 
 export async function installService(options) {

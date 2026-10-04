@@ -1,6 +1,6 @@
 {
   "name": "@1agents/bash-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lightweight Bash MCP and structured search for the DreamMate capability network",
   "type": "module",
   "license": "MIT",
