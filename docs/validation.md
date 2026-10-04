@@ -26,8 +26,11 @@
   发布 workflow 的 dry run 也已通过。
 - npm Trusted Publisher 已保存：GitHub `scottzx/bash-mcp`，workflow `publish.yml`，
   允许 `npm publish`；workflow 使用 OIDC，无需 GitHub npm token Secret。
+- `v0.1.1` 已通过 [GitHub 自动发布](https://github.com/scottzx/bash-mcp/actions/runs/37214357142)，
+  npm 官方 `latest` 为 `0.1.1`，带 SLSA provenance；[对应 CI](https://github.com/scottzx/bash-mcp/actions/runs/37214357461) 全部通过。
 - 远程 `100.75.225.56` 的 DreamMate 网关可达，节点名 `scott-pc-wsl`，
-  已有 Twenty CRM 主服务及 reader/writer 三个入口均报告健康。尚无 Bash 服务；
+  已有 Twenty CRM 主服务及 reader/writer 三个入口均报告健康；经本机
+  `dreammate_invoke(twenty.ping)` 实际调用主服务返回 `ok=true`、HTTP 200。尚无 Bash 服务；
   本机现有 SSH 密钥登录被拒绝，远程安装与 CPU、内存、磁盘检查待取得可用登录方式。
 
 完整使用方式和限制见 [README.md](../README.md)。
