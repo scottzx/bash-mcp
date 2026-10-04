@@ -2,11 +2,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { Worker } from 'node:worker_threads';
 import { methods } from './contracts.mjs';
 import { result, errorResult, parseOutput } from './result.mjs';
 
-export const VERSION = '0.1.0';
+export const VERSION = createRequire(import.meta.url)('../package.json').version;
 export const UPSTREAM_VERSION = '0.8.2';
 export { methods, errorResult };
 

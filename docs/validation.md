@@ -19,6 +19,15 @@
 - 全网发现可见 Mac 上的此服务。部分其他节点网关不可达，扫描标记 `partial=true`；
   本次只在 Mac 发布服务，没有向其他设备安装。没有进行另一台设备发起的端到端调用验证。
 - Linux systemd unit 生成已检查转义；本次未在 Linux/WSL 实机安装。
-- `npm pack` 成功生成 `1agents-bash-mcp-0.1.0.tgz`。公共 npm registry 尚未发布。
+- `npm pack` 成功；`@1agents/bash-mcp@0.1.0` 已发布到官方公共 npm registry。
+- 从官方 registry 安装到独立临时目录，通过安装包的 stdio MCP 执行 Node 命令，
+  返回 `data={"npm_install":true,"cwd":"/private/tmp"}`、退出码 0。
+- GitHub 仓库为 `scottzx/bash-mcp`；Linux Node 22/24 与 macOS Node 22 的 CI 全部通过，
+  发布 workflow 的 dry run 也已通过。
+- npm Trusted Publisher 已保存：GitHub `scottzx/bash-mcp`，workflow `publish.yml`，
+  允许 `npm publish`；workflow 使用 OIDC，无需 GitHub npm token Secret。
+- 远程 `100.75.225.56` 的 DreamMate 网关可达，节点名 `scott-pc-wsl`，
+  已有 Twenty CRM 主服务及 reader/writer 三个入口均报告健康。尚无 Bash 服务；
+  本机现有 SSH 密钥登录被拒绝，远程安装与 CPU、内存、磁盘检查待取得可用登录方式。
 
 完整使用方式和限制见 [README.md](../README.md)。
